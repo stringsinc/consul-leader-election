@@ -1,11 +1,12 @@
 package client
 
 import (
-	log "github.com/Sirupsen/logrus"
+	log "github.com/sirupsen/logrus"
 	"github.com/hashicorp/consul/api"
 )
 
 type ConsulClient struct {
+	NodeName string
 	Client *api.Client
 }
 
@@ -47,8 +48,11 @@ func (cc *ConsulClient) AquireSessionKey(key string, session string) (bool, erro
 }
 
 func (cc *ConsulClient) GetAgentName() string {
-	agent, _ := cc.Client.Agent().Self()
-	return agent["Config"]["NodeName"].(string)
+  // jna: this scheme gets the name from the agent. Obviously, this is no
+	// good if we're doing elections for a node type and not agent name type!
+	//agent, _ := cc.Client.Agent().Self()
+	//return agent["Config"]["NodeName"].(string)
+	return cc.NodeName	
 }
 
 func (cc *ConsulClient) PutKey(key *api.KVPair) (error) {
