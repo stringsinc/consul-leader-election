@@ -47,7 +47,10 @@ func (cc *ConsulClient) AquireSessionKey(key string, session string) (bool, erro
 }
 
 func (cc *ConsulClient) GetAgentName() string {
-	agent, _ := cc.Client.Agent().Self()
+	agent, err := cc.Client.Agent().Self()
+	if err != nil {
+	  log.Fatal(err)
+	}
 	return agent["Config"]["NodeName"].(string)
 }
 
